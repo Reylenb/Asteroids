@@ -1,26 +1,18 @@
-<<<<<<< HEAD
 from constants import *
 from circleshape import CircleShape
 import pygame
+from shot import Shot
 
 class Player(CircleShape):
-    def __init__(self, x, y,):
+    def __init__(self, x, y,shots):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
+        self.shots = shots
+        self.timer = 0
+        
         
     def draw(self, screen):
         pygame.draw.polygon(screen, "white", self.triangle(), 2)
-=======
-from circleshape import CircleShape
-from constants import *
-import pygame
-
-class Player(CircleShape):
-    def __init__(self, x, y):
-        super().__init__(x, y, PLAYER_RADIUS)
-        self.position = pygame.Vector2(x, y)
-        Rotation = 0
->>>>>>> 7a2114a (Ca va etre effacer)
 
     # in the player class
     def triangle(self):
@@ -29,7 +21,6 @@ class Player(CircleShape):
         a = self.position + forward * self.radius
         b = self.position - forward * self.radius - right
         c = self.position - forward * self.radius + right
-<<<<<<< HEAD
         return [a, b, c]
 
     def rotate(self, dt):
@@ -39,7 +30,8 @@ class Player(CircleShape):
     
     def update(self, dt):
         keys = pygame.key.get_pressed()
-
+        if self.timer > 0 :
+            self.timer -= dt
         if keys[pygame.K_q]:
             self.rotate(-dt)
         if keys[pygame.K_d]:
@@ -48,9 +40,20 @@ class Player(CircleShape):
             self.move(dt)
         if keys[pygame.K_s]:
             self.move(-dt)
+        if keys[pygame.K_SPACE]:
+            self.shoot()
+
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
-=======
-        return [a, b, c]
->>>>>>> 7a2114a (Ca va etre effacer)
+
+    def shoot(self):
+        print("pressed")
+        
+        if self.timer > 0:
+            return
+        
+        shot = Shot(self.position.x, self.position.y)
+        shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
+        self.timer = PLAYER_SHOOT_COOLDOWN
+        
